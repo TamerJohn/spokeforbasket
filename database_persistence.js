@@ -21,15 +21,18 @@ class DatabasePersistence {
 
 module.exports = DatabasePersistence;
 
+// const pg = require('pg')
+
+// const { Client } = pg
+// const client = new Client() // no need to pass anything to instantiate client, it'll check the env variable for missing config
+
 // const psqlDatabasePing = async () => {
-//   const { Client } = pg
 //   const client = new Client()
 //   await client.connect()
 //   const res = await client.query('SELECT color FROM colors')
 //   client.end()
-//   return(res.fields)
+//   return(res.rows)
 // }
-
 
 
 // 1. Working PSQL database.

@@ -4,6 +4,8 @@ require('dotenv').config()
 const database = require('database_persistance').DatabasePersistence
 const app = express()
 
+app.use(express.json())
+
 app.all('/:basket_address/web', (req, res) => {
   //Should record the incoming requests to database, IF there's corresponding basket_address 
 

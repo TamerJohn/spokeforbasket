@@ -14,8 +14,10 @@ CREATE TABLE requests (
   path text,
   query_params text,
   timestamp timestamp(0) DEFAULT NOW(),
-  body text
+  body text,
+  method text
 );
 
 INSERT INTO baskets (basket_address) VALUES ('test_basket');
+INSERT INTO requests (basket_id, basket_address, headers, path, query_params, body) VALUES (1, 'test_basket', 'header text here', 'path here', 'query_arams here', 'body here');
 

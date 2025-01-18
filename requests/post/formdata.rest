@@ -1,0 +1,16 @@
+POST http://localhost:3000/basket_test
+Content-Type: multipart/form-data
+
+-----------------------------212932158536399301031170084480
+Content-Disposition: form-data; name="form"
+
+data
+-----------------------------212932158536399301031170084480
+Content-Disposition: form-data; name="foo"
+
+bar
+-----------------------------212932158536399301031170084480
+Content-Disposition: form-data; name="text"
+
+maybe
+-----------------------------212932158536399301031170084480--

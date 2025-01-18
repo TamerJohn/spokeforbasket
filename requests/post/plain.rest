@@ -1,0 +1,4 @@
+POST http://localhost:3000/basket_test
+Content-Type: text/plain
+
+test string

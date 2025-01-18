@@ -1,0 +1,6 @@
+POST http://localhost:3000/basket_test
+Content-Type: application/json
+
+{
+  "number": "012-345-6789"
+}

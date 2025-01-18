@@ -1,24 +1,6 @@
 const { Client } = require('pg');
 require('dotenv').config();
 
-// class DatabasePersistence {
-//   constructor(logger) {
-//     this.client = new Client({
-//       database: '@@@@@@',
-//     });
-//     this.client.connect();
-//     this.logger = logger;
-//   }
-
-//   async query(statement, ...params) {
-//     this.logger.info(`${statement}: ${params}`);
-//     const res = await this.client.query(statement, params);
-//     return res;
-//   }
-
-
-// }
-
 class DatabasePersistence {
   constructor(logger) {
     this.logger = logger;
@@ -34,7 +16,7 @@ class DatabasePersistence {
   }
 
   async getBasketRequests(basket_address) {
-    const sql = 'SELECT headers, path, query_path, timestamp, body FROM requests WHERE basket_address = $1'
+    const sql = 'SELECT headers, path, query_params, timestamp, body FROM requests WHERE basket_address = $1'
     let response = await this.query(sql, basket_address)
     return response
   }
@@ -75,31 +57,7 @@ class DatabasePersistence {
   }
 }
 
-let db = new DatabasePersistence()
-db.getBasketRequests('test_basket')
-// db.test()
+// let db = new DatabasePersistence()
+// db.getBasketRequests('test_basket')
 
-// SELECT md5(random()::text);
-module.exports = DatabasePersistence;
-
-// const pg = require('pg')
-// const { Client } = pg
-
-// const psqlDatabasePing = async () => {
-//   const client = new Client() // no need to pass anything to instantiate client, it'll check the env variable for missing config
-//   await client.connect()
-//   const res = await client.query('SELECT color FROM colors')
-//   client.end()
-//   return(res.rows)
-// }
-
-
-//   ("createdb basket")
-//   ("createdb request")
-//   ("psql -d basket < schema.sql")
-//   ("psql -d requ < schema.sql")
-
-// TODO
-// - unique basket address generator
-// - mongoDB
-// - test with ngrok
+module.exports.DatabasePersistence = DatabasePersistence

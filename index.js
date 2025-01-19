@@ -12,7 +12,7 @@ function generateAddress() {
   return uuid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6); 
 }
 
-function basketExists(basket_address) {
+async function basketExists(basket_address) {
   return basket_address === 'test_basket'
 }
 
@@ -22,7 +22,8 @@ app.use(bodyParser.text({type: '*/*'}))
 app.get('/:basket_address/web', async (req, res, next) => {
   let basket_address = req.params.basket_address
 
-  if (!basketExists(basket_address)) {
+  let exists = await basketExists(basket_address)
+  if (!exists) {
     return next()
   }
 
@@ -33,7 +34,8 @@ app.get('/:basket_address/web', async (req, res, next) => {
 app.all('/:basket_address', async (req, res, next) => {
   let basket_address = req.params.basket_address
 
-  if (!basketExists(basket_address)) {
+  let exists = await basketExists(basket_address)
+  if (!exists) {
     return next()
   }
 
@@ -48,7 +50,7 @@ app.all('/:basket_address', async (req, res, next) => {
   }
 
   try {
-    let unused = await db.createRequest(basket_address, JSON.stringify(headers), path, query_params, body, method)
+    await db.createRequest(basket_address, JSON.stringify(headers), path, query_params, body, method)
     res.status(204).send()
   } catch {
     res.status(500).send('You broke our server')

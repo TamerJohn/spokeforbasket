@@ -59,6 +59,6 @@ class DatabasePersistence {
 }
 
 // let db = new DatabasePersistence()
-// db.getBasketRequests('test_basket')
+// db.getRequests('test_basket')
 
 module.exports.DatabasePersistence = DatabasePersistence

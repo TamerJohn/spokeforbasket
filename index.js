@@ -12,30 +12,30 @@ function generateAddress() {
   return uuid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6); 
 }
 
-async function basketExists(basket_address) {
-  // return basket_address === 'test_basket'
-  return await db.basketExists(basket_address);
+async function basketExists(basketAddress) {
+  // return basketAddress === 'test_basket'
+  return await db.basketExists(basketAddress);
 }
 
 app.use(express.json())
 app.use(bodyParser.text({type: '*/*'}))
 
-app.get('/:basket_address/web', async (req, res, next) => {
-  let basket_address = req.params.basket_address
+app.get('/:basketAddress/web', async (req, res, next) => {
+  let basketAddress = req.params.basketAddress
 
-  let exists = await basketExists(basket_address)
+  let exists = await basketExists(basketAddress)
   if (!exists) {
     return next()
   }
 
-  let requests = await db.getRequests(basket_address)
+  let requests = await db.getRequests(basketAddress)
   res.send(requests);
 })
 
-app.all('/:basket_address', async (req, res, next) => {
-  let basket_address = req.params.basket_address
+app.all('/:basketAddress', async (req, res, next) => {
+  let basketAddress = req.params.basketAddress
 
-  let exists = await basketExists(basket_address)
+  let exists = await basketExists(basketAddress)
   if (!exists) {
     return next()
   }
@@ -51,27 +51,33 @@ app.all('/:basket_address', async (req, res, next) => {
   }
 
   try {
-    await db.createRequest(basket_address, JSON.stringify(headers), path, query_params, body, method)
+    await db.createRequest(basketAddress, JSON.stringify(headers), path, query_params, body, method)
     res.status(204).send()
   } catch {
     res.status(500).send('You broke our server')
   }
 })
 
+// needs work
 app.get('/main', (req, res) => { 
   res.status(204).send('Welcome to Main Page')
 })
 
-app.delete('/:basket_address/web', (req, res) => {
-  const basket_address = req.params.basket_address
-  db.deleteBasket(basket_address)
-  res.status(204).send(`Basket address ${basket_address} has been deleted`)
+// needs work
+app.delete('/:basketAddress/web', (req, res) => {
+  const basketAddress = req.params.basketAddress
+  db.deleteBasket(basketAddress)
+  res.status(204).send(`Basket address ${basketAddress} has been deleted`)
 })
 
-app.post('/new', (req, res) => {
-  const basket_address = generateAddress()
-  db.createBasket(basket_address)
-  res.status(201).send(`Basket address ${basket_address} has been created`)
+app.post('/new', async (req, res) => {
+  const basketAddress = generateAddress()
+  try {
+    await db.createBasket(basketAddress)
+    res.status(201).send({address: basketAddress})
+  } catch {
+    res.status(500).send('Could not create new basket')
+  }
 })
 
 app.use((request, response) => {

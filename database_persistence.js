@@ -33,7 +33,7 @@ class DatabasePersistence {
   }
 
   async deleteBasket(basketAddress) {
-    const sql = 'DELETE FROM baskets (basket_address) WHERE basket_address = $1'
+    const sql = 'DELETE FROM baskets WHERE basket_address = $1'
     let response = await this.query(sql, basketAddress)
     return response
   }

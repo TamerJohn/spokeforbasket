@@ -15,27 +15,26 @@ class DatabasePersistence {
     return res.rows;
   }
 
-  async basketExists(basket_address) {
+  async basketExists(basketAddress) {
     const sql = 'SELECT 1 FROM baskets WHERE basket_address = $1'
-    let response = await this.query(sql, basket_address)
+    let response = await this.query(sql, basketAddress)
     return response.length === 1
   }
 
-  async getRequests(basket_address) {
+  async getRequests(basketAddress) {
     const sql = 'SELECT headers, path, query_params, timestamp, body, method FROM requests WHERE basket_address = $1'
-    let response = await this.query(sql, basket_address)
+    let response = await this.query(sql, basketAddress)
     return response
   }
 
-  async createBasket(basket_address) {
-    const sql = 'INSERT INTO baskets (basket_address) VALUES $1'
-    let response = await this.query(sql, basket_address)
-    return response
+  async createBasket(basketAddress) {
+    const sql = 'INSERT INTO baskets (basket_address) VALUES ($1)'
+    await this.query(sql, basketAddress)
   }
 
-  async deleteBasket(basket_address) {
+  async deleteBasket(basketAddress) {
     const sql = 'DELETE FROM baskets (basket_address) WHERE basket_address = $1'
-    let response = await this.query(sql, basket_address)
+    let response = await this.query(sql, basketAddress)
     return response
   }
 
@@ -46,15 +45,9 @@ class DatabasePersistence {
   //   return response  
   // }
 
-  async createRequest(basket_address, headers, path, query_params, body, method) {
+  async createRequest(basketAddress, headers, path, query_params, body, method) {
     const sql = 'INSERT INTO requests (basket_address, headers, path, query_params, body, method) VALUES ($1, $2, $3, $4, $5, $6)'
-    let response = await this.query(sql, basket_address, headers, path, query_params, body, method)
-    return response
-  }
-
-  async deleteRequest(basket_address) {
-    const sql = 'DELETE FROM requests (basket_address) WHERE basket_address = $1'
-    let response = await this.query(sql, basket_address)
+    let response = await this.query(sql, basketAddress, headers, path, query_params, body, method)
     return response
   }
 

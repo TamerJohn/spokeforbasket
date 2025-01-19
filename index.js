@@ -13,7 +13,8 @@ function generateAddress() {
 }
 
 async function basketExists(basket_address) {
-  return basket_address === 'test_basket'
+  // return basket_address === 'test_basket'
+  return await db.basketExists(basket_address);
 }
 
 app.use(express.json())

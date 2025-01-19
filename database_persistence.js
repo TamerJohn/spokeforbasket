@@ -15,6 +15,12 @@ class DatabasePersistence {
     return res.rows;
   }
 
+  async basketExists(basket_address) {
+    const sql = 'SELECT 1 FROM baskets WHERE basket_address = $1'
+    let response = await this.query(sql, basket_address)
+    return response.length === 1
+  }
+
   async getRequests(basket_address) {
     const sql = 'SELECT headers, path, query_params, timestamp, body, method FROM requests WHERE basket_address = $1'
     let response = await this.query(sql, basket_address)
@@ -59,6 +65,6 @@ class DatabasePersistence {
 }
 
 // let db = new DatabasePersistence()
-// db.getRequests('test_basket')
+// db.basketExists('test_basket')
 
 module.exports.DatabasePersistence = DatabasePersistence

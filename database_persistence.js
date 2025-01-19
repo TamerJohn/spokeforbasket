@@ -38,12 +38,11 @@ class DatabasePersistence {
     return response
   }
 
-  // prolly don't need getRequests and getAllRequests tbh
-  // async getAllRequests(basket_address) {
-  //   const sql = 'SELECT headers, path, query_params, timestamp, body, method FROM requests WHERE basket_address = $1'
-  //   let response = await this.query(sql, basket_address)
-  //   return response  
-  // }
+  async getAllBaskets() {
+    const sql = 'SELECT basket_address FROM baskets'
+    let response = await this.query(sql)
+    return response  
+  }
 
   async createRequest(basketAddress, headers, path, query_params, body, method) {
     const sql = 'INSERT INTO requests (basket_address, headers, path, query_params, body, method) VALUES ($1, $2, $3, $4, $5, $6)'

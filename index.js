@@ -59,11 +59,15 @@ app.all('/:basketAddress', async (req, res, next) => {
 })
 
 // needs work
-app.get('/main', (req, res) => { 
-  res.status(204).send('Welcome to Main Page')
+app.get('/all', async (req, res) => { 
+  try {
+    let baskets = await db.getAllBaskets()
+    res.send(baskets)
+  } catch {
+    res.status(500).send('Something went wrong while fetching baskets')
+  }
 })
 
-// needs work
 app.delete('/:basketAddress/web', (req, res) => {
   const basketAddress = req.params.basketAddress
   db.deleteBasket(basketAddress)

@@ -1,4 +1,4 @@
-POST http://localhost:3000/basket_test
+POST http://localhost:3000/test_basket
 Content-Type: text/plain
 
 test string

@@ -2,31 +2,42 @@ const express = require('express')
 const qs = require('qs')
 const { v4: uuidv4 } = require('uuid')
 const bodyParser = require('body-parser')
+const DatabasePersistence = require('./database_persistence').DatabasePersistence
 
-const db = require('./database_persistence').DatabasePersistence
+const db = new DatabasePersistence()
 const app = express()
-
-app.use(express.json())
-app.use(bodyParser.text({type: '*/*'}))
 
 function generateAddress() {
   const uuid = uuidv4();
   return uuid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6); 
 }
 
-// app.use(express.static('dist'))
-// app.use(bodyParser.text({type: '*/*'})) 
+function basketExists(basket_address) {
+  return basket_address === 'test_basket'
+}
 
-app.get('/:basket_address/web', (req, res) => {
-  //Should record the incoming requests to database, IF there's corresponding basket_address 
+app.use(express.json())
+app.use(bodyParser.text({type: '*/*'}))
 
-  // INSERT INTO requests (basket_address, headers, path, query_params, body) VALUES (basket_address, ...)
+app.get('/:basket_address/web', (req, res, next) => {
+  let basket_address = req.params.basket_address
+
+  if (!basketExists(basket_address)) {
+    next()
+  }
+
+  db.getRequests(basket_address).then(rows => {
+    res.send(rows);
+  })
 })
 
+//Should record the incoming requests to database, IF there's corresponding basket_address 
+
+// INSERT INTO requests (basket_address, headers, path, query_params, body) VALUES (basket_address, ...)
 app.all('/:basket_address', (req, res, next) => {
   let basket_address = req.params.basket_address
 
-  if (basket_address !== 'basket_test') {
+  if (!basketExists(basket_address)) {
     next()
   }
 
@@ -36,15 +47,17 @@ app.all('/:basket_address', (req, res, next) => {
   let method = req.method
   let body = req.body
 
-  if (typeof body === "object") {
-    if (Object.keys(body).length === 0) body = ''
+  if (headers['content-type'] !== 'application/json' && typeof body === "object") {
+    body = ''
   }
 
-  // db.createRequest(basket_address, headers, path, query_params, body)
-  res.status(200).send([basket_address, JSON.stringify(headers), path, query_params, body, method])
-  // Return all requests from a basket of matching basket_address 
-
-  // SELECT * FROM requests WHERE basket_address = :basket_address
+  db.createRequest(basket_address, JSON.stringify(headers), path, query_params, body, method)
+    .then(_ => {
+      res.status(204).send()
+    })
+    .catch(_ => {
+      res.status(500).send('Congratulations, you broke our server')
+    })
 })
 
 app.get('/main', (req, res) => { 

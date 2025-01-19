@@ -15,8 +15,8 @@ class DatabasePersistence {
     return res.rows;
   }
 
-  async getBasketRequests(basket_address) {
-    const sql = 'SELECT headers, path, query_params, timestamp, body FROM requests WHERE basket_address = $1'
+  async getRequests(basket_address) {
+    const sql = 'SELECT headers, path, query_params, timestamp, body, method FROM requests WHERE basket_address = $1'
     let response = await this.query(sql, basket_address)
     return response
   }
@@ -33,15 +33,16 @@ class DatabasePersistence {
     return response
   }
 
-  async getAllRequests(basket_address) {
-    const sql = 'SELECT * FROM requests WHERE basket_address = $1'
-    let response = await this.query(sql, basket_address)
-    return response
-  }
+  // prolly don't need getRequests and getAllRequests tbh
+  // async getAllRequests(basket_address) {
+  //   const sql = 'SELECT headers, path, query_params, timestamp, body, method FROM requests WHERE basket_address = $1'
+  //   let response = await this.query(sql, basket_address)
+  //   return response  
+  // }
 
-  async createRequest(basket_address, headers, path, query_params, body) {
-    const sql = 'INSERT INTO requests (basket_address, headers, path, query_params, body) VALUES ($1, $2, $3, $4, $5)'
-    let response = await this.query(sql, basket_address, headers, path, query_params, body)
+  async createRequest(basket_address, headers, path, query_params, body, method) {
+    const sql = 'INSERT INTO requests (basket_address, headers, path, query_params, body, method) VALUES ($1, $2, $3, $4, $5, $6)'
+    let response = await this.query(sql, basket_address, headers, path, query_params, body, method)
     return response
   }
 

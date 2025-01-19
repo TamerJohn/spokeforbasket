@@ -21,16 +21,14 @@ app.use(bodyParser.text({type: '*/*'}))
 
 app.get('/:basket_address/web', (req, res, next) => {
   let basket_address = req.params.basket_address
-  res.send({test: 'abc'})
 
-  // if (!basketExists(basket_address)) {
-  //   next()
-  // }
+  if (!basketExists(basket_address)) {
+    return next()
+  }
   
-  
-  // db.getRequests(basket_address).then(rows => {
-  //   res.send(rows);
-  // })
+  db.getRequests(basket_address).then(rows => {
+    res.send(rows);
+  })
 })
 
 //Should record the incoming requests to database, IF there's corresponding basket_address 
